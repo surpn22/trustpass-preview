@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trustpass — UI Prototype</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #111;
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ---- Loading overlay ---- */
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      gap: 20px;
+      transition: opacity 0.4s ease;
+    }
+    #loading.hide { opacity: 0; pointer-events: none; }
+
+    .brand {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #6366f1 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(99,102,241,.25);
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin .75s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .hint { font-size: 13px; color: rgba(255,255,255,.35); }
+
+    /* ---- Fallback card ---- */
+    #fallback {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #111;
+      text-align: center;
+      padding: 32px;
+      gap: 12px;
+    }
+    #fallback.show { display: flex; }
+
+    #fallback h2 { font-size: 20px; font-weight: 600; }
+    #fallback p  { font-size: 14px; color: rgba(255,255,255,.45); max-width: 320px; line-height: 1.6; }
+
+    #fallback a {
+      margin-top: 8px;
+      display: inline-block;
+      padding: 11px 28px;
+      background: #6366f1;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      transition: background .2s;
+    }
+    #fallback a:hover { background: #4f46e5; }
+
+    /* ---- The prototype iframe ---- */
+    iframe {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading">
+    <div class="brand">Trustpass</div>
+    <div class="spinner"></div>
+    <div class="hint">กำลังโหลด prototype…</div>
+  </div>
+
+  <div id="fallback">
+    <div class="brand">Trustpass</div>
+    <h2>ไม่สามารถแสดงผลใน frame ได้</h2>
+    <p>กด "เปิด Prototype" เพื่อดูใน tab ใหม่โดยไม่ต้องล็อกอิน Figma</p>
+    <a id="direct-link"
+       href="https://www.figma.com/proto/AHgeVuKvSO6YoXNrihwQL6/Trustpass-uxui?node-id=13-1364&p=f&t=UX9aKikMi0W1mSgx-0&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=13%3A1364"
+       target="_blank" rel="noopener noreferrer">
+      เปิด Prototype
+    </a>
+  </div>
+
+  <iframe
+    id="proto"
+    src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FAHgeVuKvSO6YoXNrihwQL6%2FTrustpass-uxui%3Fnode-id%3D13-1364%26p%3Df%26t%3DUX9aKikMi0W1mSgx-0%26scaling%3Dmin-zoom%26content-scaling%3Dfixed%26page-id%3D0%253A1%26starting-point-node-id%3D13%253A1364"
+    allowfullscreen
+    allow="fullscreen"
+  ></iframe>
+
+  <script>
+    const loading = document.getElementById('loading');
+    const fallback = document.getElementById('fallback');
+    const proto   = document.getElementById('proto');
+
+    // Hide loading once iframe fires load
+    proto.addEventListener('load', () => {
+      setTimeout(() => loading.classList.add('hide'), 400);
+    });
+
+    // Safety timeout: if iframe never loads in 12s, show fallback
+    const timer = setTimeout(() => {
+      if (!loading.classList.contains('hide')) {
+        loading.classList.add('hide');
+        fallback.classList.add('show');
+      }
+    }, 12000);
+
+    proto.addEventListener('load', () => clearTimeout(timer));
+  </script>
+
+</body>
+</html>
